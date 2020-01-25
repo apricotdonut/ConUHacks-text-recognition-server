@@ -1,0 +1,19 @@
+{
+  "name": "conuhacktextrecognitionserver",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/brucejh99/ConUHacks-text-recognition-server.git"
+  },
+  "author": "Bruce Hong",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/brucejh99/ConUHacks-text-recognition-server/issues"
+  },
+  "homepage": "https://github.com/brucejh99/ConUHacks-text-recognition-server#readme"
+}
