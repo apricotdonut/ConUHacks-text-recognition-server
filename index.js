@@ -1,16 +1,7 @@
-'use strict';
+'user strict'
 
-async function quickstart() {
-    const vision = require('@google-cloud/vision');
+const express = require('express');
+const app = express();
+const port = 8000;
 
-    const client = new vision.ImageAnnotatorClient();
-
-    const fileName = "meme.jpg";
-
-    const [result] = await client.documentTextDetection(fileName);
-    const fullTextAnnotation = result.fullTextAnnotation;
-    console.log(fullTextAnnotation.text);
-    
-}
-
-quickstart()
+app.listen(port, () => console.log(`Text recognition server listening of port ${port}!`));
