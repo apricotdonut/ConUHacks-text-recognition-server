@@ -7,10 +7,7 @@ async function quickstart() {
 
     const fileName = "meme.jpg";
 
-    const [result] = await client.documentTextDetection(fileName);
-    const fullTextAnnotation = result.fullTextAnnotation;
-    console.log(fullTextAnnotation.text);
-    
+    await client.documentTextDetection(fileName);
 }
 
 quickstart()

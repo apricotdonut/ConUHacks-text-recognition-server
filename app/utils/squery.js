@@ -1,51 +1,36 @@
 'use strict';
-const {Storage} = require('@google-cloud/storage');
+const { Storage } = require('@google-cloud/storage');
 const storage = new Storage();
 
 const vision = require('@google-cloud/vision');
 const client = new vision.ImageAnnotatorClient();
-async function imagefind() {
-    
-    
+
+const imagefind = async () => {
     var maxtime = "2020-01-12T13:52:34.375Z";
     const bucketName = "reresults";
-    var curr_name = "";
-
+    var curr_name = "";   
     
-    
-       storage.bucket(bucketName).getFiles(function(err, files) {
-             files.forEach(function (file, index){
-                 const len = files.length;
-                    file.getMetadata(function (err, metadata){
-                            if (comparetime(metadata.updated, maxtime)){
-                                maxtime = metadata.updated;
-                                curr_name = metadata.name
-                            }
-                        
-                            if(index === len - 1) imgtotext(curr_name);
-                    });
-             });
-    })
-    
-    
-    
+    storage.bucket(bucketName).getFiles(function(err, files) {
+        files.forEach(function (file, index){
+            const len = files.length;
+            file.getMetadata(function (err, metadata){
+                if (comparetime(metadata.updated, maxtime)){
+                    maxtime = metadata.updated;
+                    curr_name = metadata.name;
+                }
+            
+                if(index === len - 1) imgtotext(curr_name);
+            });
+        });
+    });
 }
-async function imgtotext(imagename) {
-    
-    const bucketName = 'reresults';
 
-    const [result] = await client.documentTextDetection(
+async function imgtotext(imagename) {
+    const bucketName = 'reresults';
+    await client.documentTextDetection(
       `gs://${bucketName}/${imagename}`
     );
-    
-    const fullTextAnnotation = result.fullTextAnnotation;
-    console.log(fullTextAnnotation.text);
-    
-    
-    
 }
-
-
 
 function comparetime(x, y){
     var ymdx = x.substr(0,10);
@@ -92,7 +77,11 @@ function comparetime(x, y){
     }else if (hmsx.substr(6,2) < hmsy.substr(6,2)){
         return false;
     }
-    
 }
 
-imagefind()
+imagefind();
+
+module.exports = {
+    imagefind,
+    storage
+}
