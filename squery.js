@@ -2,6 +2,8 @@
 const {Storage} = require('@google-cloud/storage');
 const storage = new Storage();
 
+const vision = require('@google-cloud/vision');
+const client = new vision.ImageAnnotatorClient();
 async function imagefind() {
     
     
@@ -20,10 +22,24 @@ async function imagefind() {
                                 curr_name = metadata.name
                             }
                         
-                            if(index === len - 1) console.log(curr_name);
+                            if(index === len - 1) imgtotext(curr_name);
                     });
              });
     })
+    
+    
+    
+}
+async function imgtotext(imagename) {
+    
+    const bucketName = 'reresults';
+
+    const [result] = await client.documentTextDetection(
+      `gs://${bucketName}/${imagename}`
+    );
+    
+    const fullTextAnnotation = result.fullTextAnnotation;
+    console.log(fullTextAnnotation.text);
     
     
     
