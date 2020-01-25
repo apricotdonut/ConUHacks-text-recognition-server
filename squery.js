@@ -2,7 +2,7 @@
 const {Storage} = require('@google-cloud/storage');
 const storage = new Storage();
 
-async function imagecompare() {
+async function imagefind() {
     
     
     var maxtime = "2020-01-12T13:52:34.375Z";
@@ -12,25 +12,23 @@ async function imagecompare() {
     
     
        storage.bucket(bucketName).getFiles(function(err, files) {
-             files.forEach(function (file){
+             files.forEach(function (file, index){
+                 const len = files.length;
                     file.getMetadata(function (err, metadata){
                             if (comparetime(metadata.updated, maxtime)){
                                 maxtime = metadata.updated;
-                                curr_name = metadata.name;
+                                curr_name = metadata.name
                             }
-                            
+                        
+                            if(index === len - 1) console.log(curr_name);
                     });
              });
     })
-    setTimeout(function () {
-        console.log(curr_name);
-    }, 2000);
-    
-    
     
     
     
 }
+
 
 
 function comparetime(x, y){
@@ -81,4 +79,4 @@ function comparetime(x, y){
     
 }
 
-imagecompare()
+imagefind()
