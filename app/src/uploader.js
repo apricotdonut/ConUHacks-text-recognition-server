@@ -55,33 +55,19 @@ module.exports = app => {
             res.status(200).send(JSON.stringify(files.length));
         });
     });
-
+    
     app.post('/image_to_text', rawBody, async (req, res) => {
+        
         const vision = require('@google-cloud/vision');
         const client = new vision.ImageAnnotatorClient();
-        try {
-            if(req.buffer && req.bodyLength > 0) {
-                const fileName = './image.jpg';
-                console.log('writing');
-                fs.writeFile(fileName, req.buffer, async (err) => {
-                    if(err) {
-                        console.log('error 1');
-                        res.status(400).send(err);
-                    }
-                    console.log('no error');
-                    exec('../utils/squery.js');
-                    // request.post('http://localhost:9000/', { text });
-                    // console.log(text);
-                    fs.unlink(fileName, err => {
-                        console.log(err);
-                    });
-                    console.log("success!");
-                    res.send('OK').status(200);
-                });
-            }
-        } catch(err) {
-            res.send(err).status(500);
-        }
+        console.log("AHH")
+        const result = await client.documentTextDetection('a.png');
+        console.log("SHit")
+        console.log(result);
+        const fullTextAnnotation = result[0].fullTextAnnotation.text;
+        console.log(fullTextAnnotation);
+        res.send('OK').status(200);
+        
     });
 
     // app.post('/image_to_text', rawBody, async (req, res) => {

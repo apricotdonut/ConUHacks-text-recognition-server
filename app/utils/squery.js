@@ -37,9 +37,9 @@ const client = new vision.ImageAnnotatorClient();
 async function imgToText() {
     try {
         console.log('start');
-        const text = await client.documentTextDetection('./image.jpg');
+        const text = await client.documentTextDetection('image.jpg');
         console.log('got text');
-        request.post('http://localhost:9000/', { text: text.fullTextAnnotation.text }); // this should throw error right now cuz there's no Django server on 9000 yet
+        //request.post('http://localhost:9000/', { text: text.fullTextAnnotation.text }); // this should throw error right now cuz there's no Django server on 9000 yet
         console.log('done');
         return text;
     } catch(err) {
@@ -94,6 +94,6 @@ async function imgToText() {
 //     }
 // }
 
-imgToText();
+// imgToText();
 
 module.exports = imgToText;
