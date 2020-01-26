@@ -105,3 +105,4 @@ dist
 
 # Others
 app/conuhacks_google_cloud.json
+.DS_Store
