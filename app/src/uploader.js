@@ -30,8 +30,8 @@ const uuid = require('uuid/v4');
 
 const push = (data) => {
     request.post({
-        url: 'http://localhost:9000/one/',
-        formData: data
+        url: 'http://localhost:9000/a/',
+        body: data
     });
 }
 function rawBody(req, res, next) {
@@ -67,7 +67,7 @@ module.exports = app => {
         //console.log(req);
         const vision = require('@google-cloud/vision');
         const client = new vision.ImageAnnotatorClient();
-        const result = await client.documentTextDetection('som.png');
+        const result = await client.documentTextDetection('sample.png');
         const fullTextAnnotation = result[0].fullTextAnnotation.text;
         thing = fullTextAnnotation.replace(/\r?\n|\r/g, " ");
         console.log("TEXT PROCESSED AND SENT");
