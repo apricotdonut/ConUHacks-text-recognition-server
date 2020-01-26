@@ -2,7 +2,7 @@ const request = require('request');
 const fs = require('fs');
 
 const imageData = {
-    data: fs.createReadStream('../../meme3.jpg')
+    data: fs.createReadStream('../../weird.jpg')
 }
 
 const test = () => {
