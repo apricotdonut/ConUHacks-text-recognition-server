@@ -1,1 +1,1 @@
-# ConUHacks-text-recognition-server
+# ConUHacks
