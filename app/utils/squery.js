@@ -1,8 +1,13 @@
 'use strict';
 const { Storage } = require('@google-cloud/storage');
-const storage = new Storage();
-
 const vision = require('@google-cloud/vision');
+const path = require('path');
+
+const storage = new Storage({
+    keyFilename: path.join(__dirname, "../conuhacks_google_cloud.json"),
+    projectId: 'handy-outpost-266217'
+});
+
 const client = new vision.ImageAnnotatorClient();
 
 const imagefind = async () => {
@@ -19,7 +24,10 @@ const imagefind = async () => {
                     curr_name = metadata.name;
                 }
             
-                if(index === len - 1) imgtotext(curr_name);
+                if(index === len - 1) {
+                    console.log(`Calling imgtotext with ${curr_name}`);
+                    imgtotext(curr_name);
+                }
             });
         });
     });
@@ -27,9 +35,10 @@ const imagefind = async () => {
 
 async function imgtotext(imagename) {
     const bucketName = 'reresults';
-    await client.documentTextDetection(
+    const text = await client.documentTextDetection(
       `gs://${bucketName}/${imagename}`
     );
+    console.log(text);
 }
 
 function comparetime(x, y){
@@ -78,8 +87,6 @@ function comparetime(x, y){
         return false;
     }
 }
-
-imagefind();
 
 module.exports = {
     imagefind,

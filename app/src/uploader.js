@@ -1,37 +1,48 @@
 'user strict'
 
 const multer = require('multer');
-const fileType = require('file-type');
-const fs = require('fs');
 const { storage } = require('../utils/squery');
+const bucket = storage.bucket('handy-outpost-266217');
 
-const upload = multer({
-    dest:'images/', 
-    limits: {fileSize: 10000000, files: 1},
-    fileFilter:  (req, file, callback) => {
-        if (!file.originalname.match(/\.(jpg|jpeg)$/)) {
-            return callback(new Error('Only Images are allowed !'), false);
-        }
-        callback(null, true);
-    }
-}).single('image');
+const uploadImage = (file) => new Promise((resolve, reject) => {
+    const { originalname, buffer } = file
+  
+    const blob = bucket.file(originalname.replace(/ /g, "_"))
+    const blobStream = blob.createWriteStream({
+      resumable: false
+    })
+    blobStream.on('finish', () => {
+      const publicUrl = format(
+        `https://storage.googleapis.com/${bucket.name}/${blob.name}`
+      )
+      resolve(publicUrl)
+    })
+    .on('error', () => {
+      reject(`Unable to upload image, something went wrong`)
+    })
+    .end(buffer)
+});
 
 module.exports = app => {
     app.get('/test', (req, res) => {
         const bucketName = "reresults";
         storage.bucket(bucketName).getFiles(function(err, files) {
-            console.log(files);
             res.status(200).send(JSON.stringify(files));
         });
     });
 
-    app.post('/image_to_text', (req, res) => {
-        upload(req, res, (err) => {
-            if(err) {
-                res.status(400).json({ message: err.message });
-            } else {
-                const path = ``
-            }
-        });
+    app.post('/image_to_text', async (req, res, next) => {
+        try {
+            const myFile = req.file
+            const imageUrl = await uploadImage(myFile)
+            res
+              .status(200)
+              .json({
+                message: "Upload was successful",
+                data: imageUrl
+              })
+          } catch (error) {
+            next(error)
+          }
     });
 }
