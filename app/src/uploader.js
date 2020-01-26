@@ -28,6 +28,15 @@ const uuid = require('uuid/v4');
 //     .end(buffer)
 // });
 
+const push = (data) => {
+    request.post({
+        url: 'http://localhost:9000',
+        formData: data
+    }, (err, res, body) => {
+        console.log('error: ' + err);
+        console.log('res: ' + JSON.stringify(res));
+    });
+}
 function rawBody(req, res, next) {
     var chunks = [];
 
@@ -60,12 +69,11 @@ module.exports = app => {
         
         const vision = require('@google-cloud/vision');
         const client = new vision.ImageAnnotatorClient();
-        console.log("AHH")
-        const result = await client.documentTextDetection('a.png');
-        console.log("SHit")
-        console.log(result);
+        const result = await client.documentTextDetection('som.png');
         const fullTextAnnotation = result[0].fullTextAnnotation.text;
-        console.log(fullTextAnnotation);
+        thing = fullTextAnnotation.replace(/\r?\n|\r/g, " ");
+        console.log(thing);
+        push(fullTextAnnotation);
         res.send('OK').status(200);
         
     });
